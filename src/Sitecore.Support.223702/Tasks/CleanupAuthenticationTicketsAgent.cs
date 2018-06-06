@@ -14,6 +14,12 @@ namespace Sitecore.Support.Tasks
     public void Run()
     {
       List<string> ticketIDs = TicketManager.GetTicketIDs();
+      // 223702 Remove the redundant underscore from the ticket ID
+      for (int i = 0; i < ticketIDs.Count(); i++)
+      {
+        ticketIDs[i] = ticketIDs[i].Replace("_", "");
+      }
+
       int countRemovedTickets = 0;
 
       Log.Info(string.Format("CleanupAuthenticationTicketsAgent: Total number of authentication tickets to process: {0}", ticketIDs.Count), this);
