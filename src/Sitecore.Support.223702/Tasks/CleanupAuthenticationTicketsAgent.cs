@@ -6,11 +6,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Sitecore.DependencyInjection;
 
 namespace Sitecore.Support.Tasks
 {
   public class CleanupAuthenticationTicketsAgent
   {
+
+    private bool _logActivity = true;
+
+    public bool LogActivity
+    {
+      get
+      {
+        return this._logActivity;
+      }
+      set
+      {
+        this._logActivity = value;
+      }
+    }
+
     public void Run()
     { 
       List<string> ticketIDs = TicketManager.GetTicketIDs();
@@ -40,5 +57,6 @@ namespace Sitecore.Support.Tasks
 
       Log.Info(string.Format("CleanupAuthenticationTicketsAgent: Number of expired authentication tickets that have been removed: {0}", countRemovedTickets), this);
     }
+
   }
 }
