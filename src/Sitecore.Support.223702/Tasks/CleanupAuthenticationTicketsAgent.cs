@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Sitecore.Data.Properties;
 using Sitecore.DependencyInjection;
 
 namespace Sitecore.Support.Tasks
@@ -30,16 +31,18 @@ namespace Sitecore.Support.Tasks
 
     public void Run()
     { 
-      List<string> ticketIDs = TicketManager.GetTicketIDs();
-      // 223702 Remove the redundant underscore from the ticket ID
-      for (int i = 0; i < ticketIDs.Count(); i++)
-      {
-        ticketIDs[i] = ticketIDs[i].Replace("_", "");
-      }
+      List<string> ticketIDs = this.GetTicketIDs();
 
       int countRemovedTickets = 0;
 
+      for (int i = 0; i < ticketIDs.Count(); i++)
+      {
+        ticketIDs[i] =
+          ticketIDs[i].Split(new[] {"__"}, StringSplitOptions.None)[1]; //Substring(0, ticketIDs[i].IndexOf("__"));// Replace("_", "");
+      }
+
       Log.Info(string.Format("CleanupAuthenticationTicketsAgent: Total number of authentication tickets to process: {0}", ticketIDs.Count), this);
+
 
       foreach (string ticketID in ticketIDs)
       {
@@ -54,8 +57,13 @@ namespace Sitecore.Support.Tasks
           }
         }
       }
-
+      
       Log.Info(string.Format("CleanupAuthenticationTicketsAgent: Number of expired authentication tickets that have been removed: {0}", countRemovedTickets), this);
+    }
+
+    private List<string> GetTicketIDs()
+    {
+      return ServiceLocator.ServiceProvider.GetService<BasePropertyStoreProvider>().GetPropertyKeys("SC_TICKET_").ToList();
     }
 
   }
