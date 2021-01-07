@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Sitecore.Support.223702</id>
+    <version>9.1.1</version>
+    <authors>Sitecore Support</authors>
+    <owners>Sitecore</owners>
+    <licenseUrl>https://github.com/sitecoresupport/Sitecore.Support.223702/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sitecoresupport/Sitecore.Support.223702/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SC_TICKET entries are never cleared from Properties table.</description>
+    <releaseNotes>SC_TICKET entries are never cleared from Properties table.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>Sitecore Support 223702</tags>
+    <dependencies>
+      <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="2.1.1" />
+      <dependency id="Sitecore.Kernel" version="9.1.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="src\Sitecore.Support.223702\App_Config\**\*" target="content\App_Config" />
+    <file src="src\Sitecore.Support.223702\bin\Sitecore.Support.223702.*" target="lib\net471\" />
+  </files>
+</package>
