@@ -25,6 +25,7 @@ jobs:
         path: ./Sitecore.Support.223702.*.nupkg
   release:
     needs: build
+    runs-on: windows-latest
     steps:
     - id: get_version
       name: Read version number
