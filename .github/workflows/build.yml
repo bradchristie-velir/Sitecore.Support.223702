@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+    not-branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: microsoft/setup-msbuild@v1
+    - uses: nuget/setup-nuget@v1
+    - name: Restore NuGet packages
+      run: nuget restore ./src/Sitecore.Support.223702.sln
+    - name: Build solution
+      run: msbuild -t:Rebuild ./src/Sitecore.Support.223702.sln
+    - name: Create NuGet package
+      run: nuget pack ./Sitecore.Support.223702.nuspec
+    - name: Save nupkg
+      uses: actions/upload-artifact@v2
+      with:
+        name: Sitecore.Support.223702
+        path: ./Sitecore.Support.223702.*.nupkg
+  release:
+    needs: build
+    steps:
+    - id: get_version
+      name: Read version number
+      uses: mavrosxristoforos/get-xml-info@1.0
+      with:
+        xml-file: ./Sitecore.Support.223702.nuspec
+        xpath: string(//package/metadata/version)
+    - run: echo "Building v${{ steps.get_version.outputs.info }}.${{ github.run_number }}"
+    # - id: create_release
+    #   name: Create GitHub release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ format('{0}.{1}', steps.get_version.outputs.info, github.run_number) }}
+    #     release_name: ${{ format('v{0}.{1}', steps.get_version.outputs.info, github.run_number) }}
+    #     draft: false
+    #     prerelease: false
+    # - name: Upload release asset
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ${{ format('./Sitecore.Support.223702.{0}.nupkg', steps.get_version.outputs.info) }}
+    #     asset_name: ${{ format('Sitecore.Support.223702.{0}.nupkg', steps.get_version.outputs.info) }}
+    #     asset_content_type: application/octet-stream
+      
+
